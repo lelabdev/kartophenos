@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { viewFilter } from '$lib/utils/view-filter.svelte';
+	import { viewFilter, VIEW_FILTERS } from '$lib/utils/view-filter.svelte';
 	import GalleryCard from '$lib/components/GalleryCard.svelte';
 	import UploadModal from '$lib/components/UploadModal.svelte';
 	import type { GalleryImage } from '$lib/types/gallery';
@@ -54,10 +54,10 @@
 {#if loadError}
 	<div class="min-h-screen bg-black flex items-center justify-center p-4">
 		<div class="text-center">
-			<p class="text-red-400 mb-4 text-sm">{loadError}</p>
+			<p class="text-primary-400 mb-4 text-sm">{loadError}</p>
 			<button
 				onclick={() => window.location.reload()}
-				class="px-6 py-3 bg-red-500/20 text-red-400 border border-red-500/50 rounded-lg hover:bg-red-500/30 transition-colors"
+				class="px-6 py-3 bg-primary-500/20 text-primary-400 border border-primary-500/50 rounded-lg hover:bg-primary-500/30 transition-colors"
 			>
 				Reload
 			</button>
@@ -76,18 +76,13 @@
 			<div class="flex items-center justify-between px-4 py-3">
 				<h1 class="text-lg font-bold text-white/90 tracking-tight">kartoPhenos</h1>
 				<div class="flex items-center gap-1">
-					{#each [ 
-						{ id: 'original' as const, label: 'Normal', color: '#fff' },
-						{ id: 'red' as const, label: 'Rouge', color: '#e74c3c' },
-						{ id: 'inverted' as const, label: 'Inversé', color: '#333' },
-						{ id: 'nightvision' as const, label: 'Night', color: '#2ecc71' }
-					] as f}
+					{#each VIEW_FILTERS as f}
 						<button
 							onclick={() => viewFilter.set(f.id)}
 							class="w-6 h-6 rounded-full transition-all {viewFilter.active === f.id
 								? 'ring-2 ring-white/80 scale-110'
 								: 'opacity-40 hover:opacity-70'}"
-							style="background-color: {f.color};"
+							style="background-color: {f.dot};"
 							aria-label={f.label}
 							title={f.label}
 						></button>
@@ -117,7 +112,7 @@
 						<button
 							onclick={() => (selectedCategory = null)}
 							class="px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors {selectedCategory === null
-								? 'bg-red-500/20 text-red-400 border border-red-500/50'
+								? 'bg-primary-500/20 text-primary-400 border border-primary-500/50'
 								: 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10'}"
 						>
 							All
@@ -126,7 +121,7 @@
 							<button
 								onclick={() => (selectedCategory = cat)}
 								class="px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors {selectedCategory === cat
-									? 'bg-red-500/20 text-red-400 border border-red-500/50'
+									? 'bg-primary-500/20 text-primary-400 border border-primary-500/50'
 									: 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10'}"
 							>
 								{cat}
@@ -162,7 +157,7 @@
 					{#if !searchQuery && !selectedCategory}
 						<button
 							onclick={handleUploadClick}
-							class="px-6 py-3 bg-red-500/20 text-red-400 border border-red-500/50 rounded-lg hover:bg-red-500/30 transition-colors"
+							class="px-6 py-3 bg-primary-500/20 text-primary-400 border border-primary-500/50 rounded-lg hover:bg-primary-500/30 transition-colors"
 						>
 							Upload your first image
 						</button>
@@ -174,7 +169,7 @@
 		<!-- Upload FAB -->
 		<button
 			onclick={handleUploadClick}
-			class="fixed bottom-6 right-6 w-14 h-14 bg-red-500/30 border border-red-500/50 rounded-full flex items-center justify-center text-red-400 hover:bg-red-500/50 active:scale-95 transition-all z-40 shadow-lg"
+			class="fixed bottom-6 right-6 w-14 h-14 bg-primary-500/30 border border-primary-500/50 rounded-full flex items-center justify-center text-primary-400 hover:bg-primary-500/50 active:scale-95 transition-all z-40 shadow-lg"
 			aria-label="Upload"
 		>
 			<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

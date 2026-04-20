@@ -241,9 +241,7 @@
 	}
 
 	function handlePinSubmit() {
-		if (!pinLabel.trim()) return;
-
-		const pin = generatePin(newPinPosition.x, newPinPosition.y, pinLabel.trim(), selectedPinColor);
+		const pin = generatePin(newPinPosition.x, newPinPosition.y, pinLabel.trim() || '', selectedPinColor);
 		onAddPin(image.id, pin);
 		showPinEditor = false;
 		pinLabel = '';
@@ -312,7 +310,7 @@
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
 	bind:this={containerElement}
-	class="fixed inset-0 bg-black overflow-hidden touch-none"
+	class="fixed inset-0 bg-black overflow-hidden touch-none {pinMode ? 'cursor-crosshair' : ''}"
 	role="application"
 	aria-label="Image viewer"
 	tabindex="0"
@@ -384,7 +382,7 @@
 
 			<button
 				onclick={() => (pinMode = !pinMode)}
-				class="p-2 {pinMode ? 'text-red-400' : 'text-white/70'} hover:text-white/100 transition-colors"
+				class="p-2 {pinMode ? 'text-primary-400' : 'text-white/70'} hover:text-white/100 transition-colors"
 				aria-label="Toggle pin mode"
 			>
 				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -413,7 +411,7 @@
 
 			<button
 				onclick={() => onToggleFavorite(image.id)}
-				class="p-2 {image.isFavorite ? 'text-red-500' : 'text-white/70'} hover:text-white/100 transition-colors"
+				class="p-2 {image.isFavorite ? 'text-primary-500' : 'text-white/70'} hover:text-white/100 transition-colors"
 				aria-label={image.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
 			>
 				<svg width="24" height="24" viewBox="0 0 24 24" fill={image.isFavorite ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2">
@@ -460,7 +458,7 @@
 					type="text"
 					bind:value={pinLabel}
 					placeholder="Enter label..."
-					class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-red-500/50 mb-4"
+					class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary-500/50 mb-4"
 					onkeypress={(e) => e.key === 'Enter' && handlePinSubmit()}
 				/>
 				<div class="flex flex-wrap gap-2 mb-4">
@@ -477,8 +475,7 @@
 				<div class="flex gap-2">
 					<button
 						onclick={handlePinSubmit}
-						disabled={!pinLabel.trim()}
-						class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-500/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+						class="flex-1 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-500/80 transition-colors"
 					>
 						Add Pin
 					</button>
@@ -506,7 +503,7 @@
 					type="text"
 					bind:value={pinLabel}
 					placeholder="Enter label..."
-					class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-red-500/50 mb-4"
+					class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary-500/50 mb-4"
 				/>
 				<div class="flex flex-wrap gap-2 mb-4">
 					{#each PIN_COLORS as color}
@@ -522,7 +519,7 @@
 				<div class="flex gap-2">
 					<button
 						onclick={handlePinUpdate}
-						class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-500/80 transition-colors"
+						class="flex-1 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-500/80 transition-colors"
 					>
 						Save
 					</button>

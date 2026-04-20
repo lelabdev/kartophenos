@@ -77,13 +77,13 @@
 {:else if error}
 	<div class="min-h-screen bg-black flex items-center justify-center">
 		<div class="text-center">
-			<p class="text-red-400 mb-4">{error}</p>
-			<button
-				onclick={handleBack}
-				class="px-6 py-3 bg-red-500/20 text-red-400 border border-red-500/50 rounded-lg hover:bg-red-500/30 transition-colors"
-			>
-				Go back
-			</button>
+		<p class="text-primary-400 mb-4">{error}</p>
+		<button
+			onclick={handleBack}
+			class="px-6 py-3 bg-primary-500/20 text-primary-400 border border-primary-500/50 rounded-lg hover:bg-primary-500/30 transition-colors"
+		>
+			Go back
+		</button>
 		</div>
 	</div>
 {:else}
@@ -96,7 +96,7 @@
 			<p class="text-white/40 mb-6">This image may have been deleted.</p>
 			<button
 				onclick={handleBack}
-				class="px-6 py-3 bg-red-500/20 text-red-400 border border-red-500/50 rounded-lg hover:bg-red-500/30 transition-colors"
+				class="px-6 py-3 bg-primary-500/20 text-primary-400 border border-primary-500/50 rounded-lg hover:bg-primary-500/30 transition-colors"
 			>
 				Go back to gallery
 			</button>

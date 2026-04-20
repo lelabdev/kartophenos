@@ -28,17 +28,17 @@
 
 	function handleDragOver(event: DragEvent) {
 		event.preventDefault();
-		dropZone?.classList.add('border-red-500/50', 'bg-red-500/10');
+		dropZone?.classList.add('border-primary-500/50', 'bg-primary-500/10');
 	}
 
 	function handleDragLeave(event: DragEvent) {
 		event.preventDefault();
-		dropZone?.classList.remove('border-red-500/50', 'bg-red-500/10');
+		dropZone?.classList.remove('border-primary-500/50', 'bg-primary-500/10');
 	}
 
 	async function handleDrop(event: DragEvent) {
 		event.preventDefault();
-		dropZone?.classList.remove('border-red-500/50', 'bg-red-500/10');
+		dropZone?.classList.remove('border-primary-500/50', 'bg-primary-500/10');
 
 		if (event.dataTransfer?.files) {
 			files = [...files, ...Array.from(event.dataTransfer.files)];
@@ -127,7 +127,7 @@
 		<div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 200px)">
 			<!-- Error -->
 			{#if errorMessage}
-				<div class="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-sm">
+				<div class="mb-4 px-4 py-3 bg-primary-500/10 border border-primary-500/50 rounded-lg text-primary-400 text-sm">
 					{errorMessage}
 				</div>
 			{/if}
@@ -171,7 +171,7 @@
 					type="text"
 					bind:value={category}
 					placeholder="Optional — e.g., Maps, Schematics"
-					class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-red-500/50 transition-colors"
+					class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-primary-500/50 transition-colors"
 					disabled={isUploading}
 					onkeydown={(e) => {
 						if (e.key === 'Enter') {
@@ -192,7 +192,7 @@
 								type="button"
 								onclick={() => (category = cat)}
 								class="px-3 py-1 text-xs rounded-full transition-colors {category === cat
-									? 'bg-red-500/20 text-red-400 border border-red-500/50'
+									? 'bg-primary-500/20 text-primary-400 border border-primary-500/50'
 									: 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white/80'}"
 							>
 								{cat}
@@ -222,7 +222,7 @@
 									<button
 										type="button"
 										onclick={() => removeFile(index)}
-										class="p-1 text-white/40 hover:text-red-400 transition-colors shrink-0"
+										class="p-1 text-white/40 hover:text-primary-400 transition-colors shrink-0"
 										aria-label="Remove file"
 									>
 										<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -241,10 +241,10 @@
 				<div class="mt-6">
 					<div class="flex items-center justify-between text-sm mb-2">
 						<span class="text-white/70">Processing...</span>
-						<span class="text-red-400">{Math.round(uploadProgress)}%</span>
+						<span class="text-primary-400">{Math.round(uploadProgress)}%</span>
 					</div>
 					<div class="h-2 bg-white/10 rounded-full overflow-hidden">
-						<div class="h-full bg-red-500/50 transition-all duration-300" style="width: {uploadProgress}%"></div>
+						<div class="h-full bg-primary-500/50 transition-all duration-300" style="width: {uploadProgress}%"></div>
 					</div>
 				</div>
 			{/if}
@@ -263,7 +263,7 @@
 			<button
 				type="button"
 				onclick={handleUpload}
-				class="px-6 py-2 bg-red-500/20 text-red-400 border border-red-500/50 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+				class="px-6 py-2 bg-primary-500/20 text-primary-400 border border-primary-500/50 rounded-lg hover:bg-primary-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 				disabled={!canUpload}
 			>
 				{isUploading ? 'Processing...' : 'Upload'}

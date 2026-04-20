@@ -53,7 +53,7 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-	class="relative group cursor-pointer overflow-hidden bg-white/5 border border-white/10 rounded-lg hover:border-red-500/50 transition-all"
+	class="relative group cursor-pointer overflow-hidden bg-white/5 border border-white/10 rounded-lg hover:border-primary-500/50 transition-all"
 	role="button"
 	tabindex="0"
 	onclick={handleCardClick}
@@ -87,7 +87,7 @@
 			fill={image.isFavorite ? 'currentColor' : 'none'}
 			stroke="currentColor"
 			stroke-width="2"
-			class={image.isFavorite ? 'text-red-500' : 'text-white/70'}
+			class={image.isFavorite ? 'text-primary-500' : 'text-white/70'}
 		>
 			<path
 				stroke-linecap="round"
@@ -104,18 +104,6 @@
 		<p class="text-white/90 text-sm font-medium truncate">
 			{image.name}
 		</p>
-		<div class="flex items-center justify-between mt-1">
-			<span
-				class="text-xs text-red-400/80 px-2 py-0.5 bg-red-500/10 rounded-full"
-			>
-				{image.category}
-			</span>
-			{#if image.isPdf}
-				<span class="text-xs text-white/50">
-					{image.pdfPageCount}p
-				</span>
-			{/if}
-		</div>
 	</div>
 
 	<!-- Delete Menu -->
@@ -144,7 +132,7 @@
 					</button>
 					<button
 						onclick={handleDelete}
-						class="flex-1 px-3 py-2 bg-red-500/20 text-red-400 border border-red-500/50 rounded-lg hover:bg-red-500/30 transition-colors text-sm"
+						class="flex-1 px-3 py-2 bg-primary-500/20 text-primary-400 border border-primary-500/50 rounded-lg hover:bg-primary-500/30 transition-colors text-sm"
 					>
 						Delete
 					</button>
