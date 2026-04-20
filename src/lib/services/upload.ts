@@ -1,0 +1,199 @@
+import type { GalleryImage, Pin } from '$lib/types/gallery';
+
+// Lazy-load pdfjs to avoid top-level side effects
+let pdfjsLib: typeof import('pdfjs-dist') | null = null;
+
+async function getPdfjs() {
+	if (!pdfjsLib) {
+		pdfjsLib = await import('pdfjs-dist');
+		pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+			'pdfjs-dist/build/pdf.worker.min.mjs',
+			import.meta.url
+		).toString();
+	}
+	return pdfjsLib;
+}
+
+export async function fileToDataUrl(file: File): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = () => {
+			if (typeof reader.result === 'string') {
+				resolve(reader.result);
+			} else {
+				reject(new Error('Failed to read file as data URL'));
+			}
+		};
+		reader.onerror = () => reject(new Error('Failed to read file'));
+		reader.readAsDataURL(file);
+	});
+}
+
+export async function createThumbnail(dataUrl: string, maxSize: number = 300): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const img = new Image();
+		img.onload = () => {
+			const canvas = document.createElement('canvas');
+			let { width, height } = img;
+
+			if (width > height) {
+				if (width > maxSize) {
+					height = (height * maxSize) / width;
+					width = maxSize;
+				}
+			} else {
+				if (height > maxSize) {
+					width = (width * maxSize) / height;
+					height = maxSize;
+				}
+			}
+
+			canvas.width = Math.max(1, Math.round(width));
+			canvas.height = Math.max(1, Math.round(height));
+
+			const ctx = canvas.getContext('2d');
+			if (!ctx) {
+				reject(new Error('Failed to get canvas context'));
+				return;
+			}
+
+			ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+			resolve(canvas.toDataURL('image/jpeg', 0.8));
+		};
+		img.onerror = () => reject(new Error('Failed to load image for thumbnail'));
+		img.src = dataUrl;
+	});
+}
+
+export async function pdfToImage(file: File): Promise<{ dataUrl: string; pageCount: number }> {
+	const pdfjs = await getPdfjs();
+	const arrayBuffer = await file.arrayBuffer();
+	const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+	const pageCount = pdf.numPages;
+
+	const page = await pdf.getPage(1);
+	const viewport = page.getViewport({ scale: 2.0 });
+	const canvas = document.createElement('canvas');
+
+	canvas.height = viewport.height;
+	canvas.width = viewport.width;
+
+	await page.render({
+		canvas,
+		viewport
+	}).promise;
+
+	const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+	return { dataUrl, pageCount };
+}
+
+export function isImageFile(file: File): boolean {
+	const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/bmp'];
+	return validTypes.includes(file.type);
+}
+
+export function isPdfFile(file: File): boolean {
+	return file.type === 'application/pdf';
+}
+
+export function getImageDimensions(dataUrl: string): Promise<{ width: number; height: number }> {
+	return new Promise((resolve, reject) => {
+		const img = new Image();
+		img.onload = () => resolve({ width: img.width, height: img.height });
+		img.onerror = () => reject(new Error('Failed to load image'));
+		img.src = dataUrl;
+	});
+}
+
+export async function convertToGrayscale(dataUrl: string): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const img = new Image();
+		img.onload = () => {
+			const canvas = document.createElement('canvas');
+			canvas.width = img.width;
+			canvas.height = img.height;
+
+			const ctx = canvas.getContext('2d');
+			if (!ctx) {
+				reject(new Error('Failed to get canvas context'));
+				return;
+			}
+
+			ctx.drawImage(img, 0, 0);
+
+			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			const data = imageData.data;
+
+			for (let i = 0; i < data.length; i += 4) {
+				const gray = data[i]! * 0.299 + data[i + 1]! * 0.587 + data[i + 2]! * 0.114;
+				data[i] = gray;
+				data[i + 1] = gray;
+				data[i + 2] = gray;
+			}
+
+			ctx.putImageData(imageData, 0, 0);
+			resolve(canvas.toDataURL('image/jpeg', 0.92));
+		};
+		img.onerror = () => reject(new Error('Failed to load image for grayscale conversion'));
+		img.src = dataUrl;
+	});
+}
+
+export function isGrayscale(dataUrl: string): Promise<boolean> {
+	return new Promise((resolve) => {
+		const img = new Image();
+		img.onload = () => {
+			try {
+				const canvas = document.createElement('canvas');
+				const sampleSize = 50;
+				const scale = Math.min(1, sampleSize / Math.max(img.width, img.height));
+				canvas.width = Math.max(1, Math.round(img.width * scale));
+				canvas.height = Math.max(1, Math.round(img.height * scale));
+
+				const ctx = canvas.getContext('2d');
+				if (!ctx) {
+					resolve(false);
+					return;
+				}
+
+				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+				const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+				const data = imageData.data;
+
+				let colorPixels = 0;
+				const totalPixels = data.length / 4;
+				const threshold = 20;
+
+				for (let i = 0; i < data.length; i += 4) {
+					const r = data[i]!;
+					const g = data[i + 1]!;
+					const b = data[i + 2]!;
+					if (Math.max(Math.abs(r - g), Math.abs(r - b), Math.abs(g - b)) > threshold) {
+						colorPixels++;
+					}
+				}
+
+				resolve(colorPixels / totalPixels < 0.05);
+			} catch {
+				resolve(false);
+			}
+		};
+		img.onerror = () => resolve(false);
+		img.src = dataUrl;
+	});
+}
+
+export function generateId(): string {
+	return crypto.randomUUID();
+}
+
+export function generatePin(x: number, y: number, label: string, color: string = '#e74c3c'): Pin {
+	return {
+		id: generateId(),
+		x,
+		y,
+		label,
+		color,
+		createdAt: Date.now()
+	};
+}

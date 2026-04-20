@@ -1,0 +1,40 @@
+export type ViewFilter = 'original' | 'red' | 'inverted' | 'nightvision';
+
+const STORAGE_KEY = 'kartophenos-filter';
+
+export const VIEW_FILTERS: { id: ViewFilter; label: string; css: string }[] = [
+	{ id: 'original', label: 'Normal', css: '' },
+	{ id: 'red', label: 'Rouge', css: 'invert(100%) sepia(100%) saturate(4) hue-rotate(-30deg) brightness(0.7)' },
+	{ id: 'inverted', label: 'Inversé', css: 'invert(100%)' },
+	{ id: 'nightvision', label: 'Night', css: 'invert(100%) sepia(100%) saturate(1.5) hue-rotate(80deg) brightness(0.8)' }
+];
+
+function getStored(): ViewFilter {
+	if (typeof window === 'undefined') return 'original';
+	const stored = localStorage.getItem(STORAGE_KEY);
+	if (stored && VIEW_FILTERS.some((f) => f.id === stored)) return stored as ViewFilter;
+	return 'original';
+}
+
+let active = $state<ViewFilter>(typeof window !== 'undefined' ? getStored() : 'original');
+
+function set(filter: ViewFilter) {
+	active = filter;
+	if (typeof window !== 'undefined') {
+		localStorage.setItem(STORAGE_KEY, filter);
+	}
+}
+
+function cycle() {
+	const ids = VIEW_FILTERS.map((f) => f.id);
+	const next = (ids.indexOf(active) + 1) % ids.length;
+	set(ids[next]!);
+}
+
+export const viewFilter = {
+	get active() { return active; },
+	get css() { return VIEW_FILTERS.find((f) => f.id === active)?.css ?? ''; },
+	get current() { return VIEW_FILTERS.find((f) => f.id === active)!; },
+	set,
+	cycle
+};
