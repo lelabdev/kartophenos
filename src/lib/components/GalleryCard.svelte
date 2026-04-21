@@ -2,6 +2,7 @@
 	import { getGalleryService } from '$lib/services/gallery.svelte';
 	import { viewFilter } from '$lib/utils/view-filter.svelte';
 	import type { GalleryImage } from '$lib/types/gallery';
+	import { Heart } from 'lucide-svelte';
 
 	interface Props {
 		image: GalleryImage;
@@ -80,21 +81,7 @@
 		class="absolute top-2 right-2 p-2 bg-surface-950/60 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
 		aria-label={image.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
 	>
-		<svg
-			width="18"
-			height="18"
-			viewBox="0 0 24 24"
-			fill={image.isFavorite ? 'currentColor' : 'none'}
-			stroke="currentColor"
-			stroke-width="2"
-			class={image.isFavorite ? 'text-primary-500' : 'text-surface-300'}
-		>
-			<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-			/>
-		</svg>
+		<Heart size={18} fill={image.isFavorite ? 'currentColor' : 'none'} class={image.isFavorite ? 'text-primary-500' : 'text-surface-300'} />
 	</button>
 
 	<!-- Info Overlay -->

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
+	import { Frown } from 'lucide-svelte';
 	import { getGalleryService } from '$lib/services';
 	import ImageViewer from '$lib/components/ImageViewer.svelte';
 	import type { GalleryImage, Pin } from '$lib/types/gallery';
@@ -18,7 +19,6 @@
 		const img = galleryService.images.find((i) => i.id === imageId);
 		if (img) {
 			imageData = img;
-			// Load full-size dataUrl from IndexedDB
 			galleryService.getFullSizeDataUrl(img.id).then((url) => {
 				fullDataUrl = url;
 				loading = false;
@@ -79,8 +79,8 @@
 		<div class="text-center">
 		<p class="text-primary-400 mb-4">{error}</p>
 		<button
-			onclick={handleBack}
-			class="px-6 py-3 bg-primary-500/20 text-primary-400 border border-primary-500/50 rounded-lg hover:bg-primary-500/30 transition-colors"
+		onclick={handleBack}
+		class="px-6 py-3 bg-primary-500/20 text-primary-400 border border-primary-500/50 rounded-lg hover:bg-primary-500/30 transition-colors"
 		>
 			Go back
 		</button>
@@ -89,9 +89,7 @@
 {:else}
 	<div class="min-h-screen bg-surface-950 flex items-center justify-center">
 		<div class="text-center">
-			<svg class="w-20 h-20 mx-auto mb-4 text-surface-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-			</svg>
+			<Frown size={80} class="mx-auto mb-4 text-surface-700" />
 			<h2 class="text-xl font-bold text-surface-300 mb-2">Image not found</h2>
 			<p class="text-surface-600 mb-6">This image may have been deleted.</p>
 			<button

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { Search, AlertTriangle } from 'lucide-svelte';
 
 	const status = $derived(page.status);
 	const message = $derived(page.error?.message);
@@ -31,26 +32,11 @@
 <div class="min-h-screen flex items-center justify-center bg-surface-950 px-4 py-16">
 	<div class="bg-surface-500/5 border border-surface-300/10 rounded-2xl p-8 sm:p-12 text-center max-w-lg">
 		<div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-primary-500/10 mb-8">
-			<svg
-				width="48"
-				height="48"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				class="text-primary-500"
-			>
-				{#if errorConfig.icon === 'search'}
-					<circle cx="11" cy="11" r="8" />
-					<path d="m21 21-4.3-4.3" />
+			{#if errorConfig.icon === 'search'}
+					<Search size={48} class="text-primary-500" />
 				{:else}
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-					/>
+					<AlertTriangle size={48} class="text-primary-500" />
 				{/if}
-			</svg>
 		</div>
 
 		<div class="space-y-4">

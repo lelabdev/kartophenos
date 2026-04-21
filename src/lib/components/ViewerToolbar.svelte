@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { viewFilter, VIEW_FILTERS } from '$lib/utils/view-filter.svelte';
 	import type { GalleryImage } from '$lib/types/gallery';
+	import { ChevronLeft, MapPin, RefreshCw, Heart, Sun } from 'lucide-svelte';
 
 	interface Props {
 		image: GalleryImage;
@@ -36,23 +37,14 @@
 			class="p-2 text-surface-300 hover:text-surface-50/100 transition-colors"
 			aria-label="Back"
 		>
-			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-			</svg>
+			<ChevronLeft size={24} />
 		</button>
 
 		<button
 			onclick={onTogglePinMode}
 			class="p-2 {pinMode ? 'text-primary-400' : 'text-surface-300'} hover:text-surface-50/100 transition-colors"
 			aria-label="Toggle pin mode"		>
-			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-				/>
-				<circle cx="12" cy="9" r="2.5" />
-			</svg>
+			<MapPin size={24} />
 		</button>
 
 		<button
@@ -60,13 +52,7 @@
 			class="p-2 text-surface-300 hover:text-surface-50/100 transition-colors"
 			aria-label="Reset view"
 		>
-			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-				/>
-			</svg>
+			<RefreshCw size={24} />
 		</button>
 
 		<button
@@ -74,13 +60,7 @@
 			class="p-2 {image.isFavorite ? 'text-primary-500' : 'text-surface-300'} hover:text-surface-50/100 transition-colors"
 			aria-label={image.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
 		>
-			<svg width="24" height="24" viewBox="0 0 24 24" fill={image.isFavorite ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-				/>
-			</svg>
+			<Heart size={24} fill={image.isFavorite ? 'currentColor' : 'none'} />
 		</button>
 
 		<!-- View filters -->
@@ -100,10 +80,7 @@
 
 		<!-- Brightness slider -->
 		<div class="flex items-center gap-2">
-			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-surface-600 shrink-0">
-				<circle cx="12" cy="12" r="5" />
-				<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-			</svg>
+			<Sun size={14} class="text-surface-600 shrink-0" />
 			<input
 				type="range"
 				min="20"
