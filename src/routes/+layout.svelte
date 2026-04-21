@@ -12,7 +12,7 @@
 </script>
 
 <div
-	class="min-h-screen bg-black"
+	class="min-h-screen bg-surface-950"
 	data-theme={viewFilter.theme}
 	data-mode="dark"
 >

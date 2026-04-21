@@ -62,8 +62,8 @@
 </svelte:head>
 
 {#if loading}
-	<div class="min-h-screen bg-black flex items-center justify-center">
-		<div class="text-white/50 animate-pulse">Loading...</div>
+	<div class="min-h-screen bg-surface-950 flex items-center justify-center">
+		<div class="text-surface-500 animate-pulse">Loading...</div>
 	</div>
 {:else if imageData && fullDataUrl}
 	<ImageViewer
@@ -75,7 +75,7 @@
 		onUpdatePin={handleUpdatePin}
 	/>
 {:else if error}
-	<div class="min-h-screen bg-black flex items-center justify-center">
+	<div class="min-h-screen bg-surface-950 flex items-center justify-center">
 		<div class="text-center">
 		<p class="text-primary-400 mb-4">{error}</p>
 		<button
@@ -87,13 +87,13 @@
 		</div>
 	</div>
 {:else}
-	<div class="min-h-screen bg-black flex items-center justify-center">
+	<div class="min-h-screen bg-surface-950 flex items-center justify-center">
 		<div class="text-center">
-			<svg class="w-20 h-20 mx-auto mb-4 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<svg class="w-20 h-20 mx-auto mb-4 text-surface-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 			</svg>
-			<h2 class="text-xl font-bold text-white/70 mb-2">Image not found</h2>
-			<p class="text-white/40 mb-6">This image may have been deleted.</p>
+			<h2 class="text-xl font-bold text-surface-300 mb-2">Image not found</h2>
+			<p class="text-surface-600 mb-6">This image may have been deleted.</p>
 			<button
 				onclick={handleBack}
 				class="px-6 py-3 bg-primary-500/20 text-primary-400 border border-primary-500/50 rounded-lg hover:bg-primary-500/30 transition-colors"

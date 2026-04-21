@@ -53,7 +53,7 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-	class="relative group cursor-pointer overflow-hidden bg-white/5 border border-white/10 rounded-lg hover:border-primary-500/50 transition-all"
+	class="relative group cursor-pointer overflow-hidden bg-surface-500/5 border border-surface-300/10 rounded-lg hover:border-primary-500/50 transition-all"
 	role="button"
 	tabindex="0"
 	onclick={handleCardClick}
@@ -77,7 +77,7 @@
 	<!-- Favorite Button -->
 	<button
 		onclick={handleFavoriteClick}
-		class="absolute top-2 right-2 p-2 bg-black/60 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+		class="absolute top-2 right-2 p-2 bg-surface-950/60 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
 		aria-label={image.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
 	>
 		<svg
@@ -87,7 +87,7 @@
 			fill={image.isFavorite ? 'currentColor' : 'none'}
 			stroke="currentColor"
 			stroke-width="2"
-			class={image.isFavorite ? 'text-primary-500' : 'text-white/70'}
+			class={image.isFavorite ? 'text-primary-500' : 'text-surface-300'}
 		>
 			<path
 				stroke-linecap="round"
@@ -101,7 +101,7 @@
 	<div
 		class="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/80 to-transparent"
 	>
-		<p class="text-white/90 text-sm font-medium truncate">
+		<p class="text-surface-100 text-sm font-medium truncate">
 			{image.name}
 		</p>
 	</div>
@@ -118,15 +118,15 @@
 		>
 			<div
 				data-delete-menu
-				class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black border border-white/10 rounded-xl p-4 shadow-xl"
+				class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-950 border border-surface-300/10 rounded-xl p-4 shadow-xl"
 			>
-				<p class="text-white/90 text-sm mb-3">
+				<p class="text-surface-100 text-sm mb-3">
 					Are you sure you want to delete this image?
 				</p>
 				<div class="flex gap-2">
 					<button
 						onclick={() => (showDeleteMenu = false)}
-						class="flex-1 px-3 py-2 bg-white/5 text-white/70 border border-white/10 rounded-lg hover:bg-white/10 transition-colors text-sm"
+						class="flex-1 px-3 py-2 bg-surface-500/5 text-surface-300 border border-surface-300/10 rounded-lg hover:bg-surface-400/10 transition-colors text-sm"
 					>
 						Cancel
 					</button>

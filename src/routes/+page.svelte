@@ -52,7 +52,7 @@
 </svelte:head>
 
 {#if loadError}
-	<div class="min-h-screen bg-black flex items-center justify-center p-4">
+	<div class="min-h-screen bg-surface-950 flex items-center justify-center p-4">
 		<div class="text-center">
 			<p class="text-primary-400 mb-4 text-sm">{loadError}</p>
 			<button
@@ -64,17 +64,17 @@
 		</div>
 	</div>
 {:else if !galleryService}
-	<div class="min-h-screen bg-black flex items-center justify-center">
-		<p class="text-white/50 animate-pulse">Loading gallery...</p>
+	<div class="min-h-screen bg-surface-950 flex items-center justify-center">
+		<p class="text-surface-500 animate-pulse">Loading gallery...</p>
 	</div>
 {:else}
-	<div class="min-h-screen bg-black">
+	<div class="min-h-screen bg-surface-950">
 		<!-- Top Navigation -->
 		<nav
-			class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10"
+			class="fixed top-0 left-0 right-0 z-50 bg-surface-950/80 backdrop-blur-sm border-b border-surface-300/10"
 		>
 			<div class="flex items-center justify-between px-4 py-3">
-				<h1 class="text-lg font-bold text-white/90 tracking-tight">kartoPhenos</h1>
+				<h1 class="text-lg font-bold text-surface-100 tracking-tight">kartoPhenos</h1>
 				<div class="flex items-center gap-1">
 					{#each VIEW_FILTERS as f}
 						<button
@@ -100,7 +100,7 @@
 						type="text"
 						placeholder="Search..."
 						bind:value={searchQuery}
-						class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-white/30 transition-colors"
+						class="w-full px-4 py-3 bg-surface-500/5 border border-surface-300/10 rounded-lg text-surface-50 placeholder-surface-700 focus:outline-none focus:border-surface-300/30 transition-colors"
 					/>
 				</div>
 			</div>
@@ -113,7 +113,7 @@
 							onclick={() => (selectedCategory = null)}
 							class="px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors {selectedCategory === null
 								? 'bg-primary-500/20 text-primary-400 border border-primary-500/50'
-								: 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10'}"
+								: 'bg-surface-500/5 text-surface-300 border border-surface-300/10 hover:bg-surface-400/10'}"
 						>
 							All
 						</button>
@@ -122,7 +122,7 @@
 								onclick={() => (selectedCategory = cat)}
 								class="px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors {selectedCategory === cat
 									? 'bg-primary-500/20 text-primary-400 border border-primary-500/50'
-									: 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10'}"
+									: 'bg-surface-500/5 text-surface-300 border border-surface-300/10 hover:bg-surface-400/10'}"
 							>
 								{cat}
 							</button>
@@ -143,13 +143,13 @@
 				</div>
 			{:else}
 				<div class="flex flex-col items-center justify-center py-20 text-center">
-					<div class="w-20 h-20 mb-4 rounded-full bg-white/5 flex items-center justify-center">
-						<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-white/30">
+					<div class="w-20 h-20 mb-4 rounded-full bg-surface-500/5 flex items-center justify-center">
+						<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-surface-700">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
 						</svg>
 					</div>
-					<h2 class="text-xl font-bold text-white/70 mb-2">No images yet</h2>
-					<p class="text-white/40 mb-6 max-w-md">
+					<h2 class="text-xl font-bold text-surface-300 mb-2">No images yet</h2>
+					<p class="text-surface-600 mb-6 max-w-md">
 						{searchQuery || selectedCategory
 							? 'No images match your search.'
 							: 'Start by uploading your first photo or PDF.'}

@@ -299,7 +299,7 @@
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
 	bind:this={containerElement}
-	class="fixed inset-0 bg-black overflow-hidden touch-none {pinMode ? 'cursor-crosshair' : ''}"
+	class="fixed inset-0 bg-surface-950 overflow-hidden touch-none {pinMode ? 'cursor-crosshair' : ''}"
 	role="application"
 	aria-label="Image viewer"
 	tabindex="0"
@@ -346,7 +346,7 @@
 				></div>
 				{#if pin.label}
 					<div
-						class="absolute left-full top-1/2 -translate-y-1/2 ml-1 px-2 py-1 bg-black/80 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+						class="absolute left-full top-1/2 -translate-y-1/2 ml-1 px-2 py-1 bg-surface-950/80 text-surface-50 text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
 					>
 						{pin.label}
 					</div>
@@ -376,7 +376,7 @@
 
 	<!-- Pin Color Picker (shown when pin button clicked) -->
 	{#if pickingPinColor}
-		<div class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-black/90 backdrop-blur-sm border border-white/10 rounded-full px-4 py-2 flex items-center gap-3">
+		<div class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-surface-950/90 backdrop-blur-sm border border-surface-300/10 rounded-full px-4 py-2 flex items-center gap-3">
 			{#each PIN_COLORS as c}
 				<button
 					onclick={() => {
@@ -384,7 +384,7 @@
 						pickingPinColor = false;
 						pinMode = true;
 					}}
-					class="w-8 h-8 rounded-full border-2 transition-all hover:scale-110 {selectedPinColor === c.value ? 'border-white' : 'border-transparent'}"
+					class="w-8 h-8 rounded-full border-2 transition-all hover:scale-110 {selectedPinColor === c.value ? 'border-surface-300' : 'border-transparent'}"
 					style="background-color: {c.value};"
 					title={c.name}
 					aria-label={c.name}
@@ -392,7 +392,7 @@
 			{/each}
 			<button
 				onclick={() => (pickingPinColor = false)}
-				class="text-white/50 hover:text-white/80 text-xs ml-1"
+				class="text-surface-500 hover:text-surface-50/80 text-xs ml-1"
 				aria-label="Cancel"
 			>
 				✕

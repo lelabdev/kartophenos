@@ -28,12 +28,12 @@
 </script>
 
 <div
-	class="fixed bottom-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-t border-white/10 transition-opacity {visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
+	class="fixed bottom-0 left-0 right-0 z-50 bg-surface-950/80 backdrop-blur-sm border-t border-surface-300/10 transition-opacity {visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}"
 >
 	<div class="flex items-center justify-center gap-4 px-4 py-4">
 		<button
 			onclick={onBack}
-			class="p-2 text-white/70 hover:text-white/100 transition-colors"
+			class="p-2 text-surface-300 hover:text-surface-50/100 transition-colors"
 			aria-label="Back"
 		>
 			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -43,7 +43,7 @@
 
 		<button
 			onclick={onTogglePinMode}
-			class="p-2 {pinMode ? 'text-primary-400' : 'text-white/70'} hover:text-white/100 transition-colors"
+			class="p-2 {pinMode ? 'text-primary-400' : 'text-surface-300'} hover:text-surface-50/100 transition-colors"
 			aria-label="Toggle pin mode"		>
 			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 				<path
@@ -57,7 +57,7 @@
 
 		<button
 			onclick={onResetView}
-			class="p-2 text-white/70 hover:text-white/100 transition-colors"
+			class="p-2 text-surface-300 hover:text-surface-50/100 transition-colors"
 			aria-label="Reset view"
 		>
 			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -71,7 +71,7 @@
 
 		<button
 			onclick={() => onToggleFavorite(image.id)}
-			class="p-2 {image.isFavorite ? 'text-primary-500' : 'text-white/70'} hover:text-white/100 transition-colors"
+			class="p-2 {image.isFavorite ? 'text-primary-500' : 'text-surface-300'} hover:text-surface-50/100 transition-colors"
 			aria-label={image.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
 		>
 			<svg width="24" height="24" viewBox="0 0 24 24" fill={image.isFavorite ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2">
@@ -100,7 +100,7 @@
 
 		<!-- Brightness slider -->
 		<div class="flex items-center gap-2">
-			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/40 shrink-0">
+			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-surface-600 shrink-0">
 				<circle cx="12" cy="12" r="5" />
 				<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
 			</svg>
@@ -111,12 +111,12 @@
 				step="5"
 				value={brightness}
 				oninput={(e) => onBrightnessChange(Number((e.target as HTMLInputElement).value))}
-				class="w-20 h-1 appearance-none bg-white/20 rounded-full accent-white/60 cursor-pointer"
+				class="w-20 h-1 appearance-none bg-surface-300/20 rounded-full accent-surface-50/60 cursor-pointer"
 				aria-label="Brightness"
 			/>
 		</div>
 
-		<div class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-white/50 text-xs truncate max-w-[120px]">
+		<div class="px-3 py-1 bg-surface-500/5 border border-surface-300/10 rounded-full text-surface-500 text-xs truncate max-w-[120px]">
 			{image.name}
 		</div>
 	</div>

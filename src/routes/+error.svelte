@@ -28,8 +28,8 @@
 	<meta name="description" content={errorConfig.description} />
 </svelte:head>
 
-<div class="min-h-screen flex items-center justify-center bg-black px-4 py-16">
-	<div class="bg-white/5 border border-white/10 rounded-2xl p-8 sm:p-12 text-center max-w-lg">
+<div class="min-h-screen flex items-center justify-center bg-surface-950 px-4 py-16">
+	<div class="bg-surface-500/5 border border-surface-300/10 rounded-2xl p-8 sm:p-12 text-center max-w-lg">
 		<div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-primary-500/10 mb-8">
 			<svg
 				width="48"
@@ -55,15 +55,15 @@
 
 		<div class="space-y-4">
 			<p class="text-8xl font-black text-primary-500/20">{errorConfig.code}</p>
-			<h1 class="text-2xl sm:text-3xl font-bold text-white/90">{errorConfig.title}</h1>
-			<p class="text-white/50 text-base">{errorConfig.description}</p>
+			<h1 class="text-2xl sm:text-3xl font-bold text-surface-100">{errorConfig.title}</h1>
+			<p class="text-surface-500 text-base">{errorConfig.description}</p>
 
 			{#if status !== 404 && message}
 				<div
 					class="mt-6 p-4 bg-primary-500/10 border border-primary-500/20 rounded-xl text-left"
 				>
 					<p
-						class="text-[10px] uppercase font-bold text-white/50 mb-1 tracking-wider"
+						class="text-[10px] uppercase font-bold text-surface-500 mb-1 tracking-wider"
 					>
 						Error Details
 					</p>
@@ -83,7 +83,7 @@
 			</a>
 			<a
 				href="/"
-				class="px-8 py-3 bg-white/5 text-white/70 border border-white/10 rounded-lg hover:bg-white/10 transition-colors"
+				class="px-8 py-3 bg-surface-500/5 text-surface-300 border border-surface-300/10 rounded-lg hover:bg-surface-400/10 transition-colors"
 			>
 				Go Home
 			</a>
