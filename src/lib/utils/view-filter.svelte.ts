@@ -12,15 +12,15 @@ export const VIEW_FILTERS: {
 	{
 		id: 'red',
 		label: 'Rouge',
-		// invert: white→black, black→white. Then hue-rotate shifts the new white to red.
-		css: 'invert(1) hue-rotate(-30deg) brightness(0.85)',
+		// B&W → invert (black bg, white lines) → tint red
+		css: 'grayscale(1) invert(1) brightness(0.85) sepia(1) saturate(3) hue-rotate(-30deg)',
 		dot: '#e74c3c'
 	},
 	{
 		id: 'nightvision',
 		label: 'Night',
-		// invert: white→black, black→white. hue-rotate(80deg) shifts the new white to green.
-		css: 'invert(1) hue-rotate(80deg) brightness(0.85)',
+		// B&W → invert (black bg, white lines) → tint green (night vision)
+		css: 'grayscale(1) invert(1) brightness(0.85) sepia(1) saturate(3) hue-rotate(80deg)',
 		dot: '#2ecc71'
 	}
 ];
