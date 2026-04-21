@@ -7,9 +7,7 @@ import {
 	isImageFile,
 	isPdfFile,
 	getImageDimensions,
-	generateId,
-	convertToGrayscale,
-	isGrayscale
+	generateId
 } from './upload';
 
 const imagesStore = createStore('kartophenos-meta', 'images');
@@ -94,17 +92,6 @@ export class GalleryService {
 				pdfPageCount = result.pageCount;
 			} else {
 				throw new Error('Unsupported file type: ' + file.type);
-			}
-
-			// Auto-convert to grayscale if image has color (maps/cards look better in B&W)
-			// Wrapped in try/catch so upload still works even if conversion fails
-			try {
-				const alreadyGray = await isGrayscale(dataUrl);
-				if (!alreadyGray) {
-					dataUrl = await convertToGrayscale(dataUrl);
-				}
-			} catch (grayError) {
-				console.warn('[kartoPhenos] Grayscale conversion skipped:', grayError);
 			}
 
 			const { width, height } = await getImageDimensions(dataUrl);

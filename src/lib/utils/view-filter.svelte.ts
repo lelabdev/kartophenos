@@ -12,19 +12,19 @@ export const VIEW_FILTERS: {
 	{
 		id: 'red',
 		label: 'Rouge',
-		css: 'invert(100%) sepia(100%) saturate(4) hue-rotate(-30deg) brightness(0.7)',
+		css: 'sepia(100%) saturate(3) hue-rotate(-30deg) brightness(0.9)',
 		dot: '#e74c3c'
 	},
 	{
 		id: 'inverted',
 		label: 'Inversé',
-		css: 'invert(100%)',
+		css: 'invert(100%) brightness(0.15)',
 		dot: '#333'
 	},
 	{
 		id: 'nightvision',
 		label: 'Night',
-		css: 'invert(100%) sepia(100%) saturate(1.5) hue-rotate(80deg) brightness(0.8)',
+		css: 'sepia(100%) saturate(2) hue-rotate(80deg) brightness(0.9)',
 		dot: '#2ecc71'
 	}
 ];
