@@ -207,16 +207,16 @@
 	--color-error-contrast-950: var(--color-error-contrast-light);
 
 	/* Surface colors: Near-blacks with subtle red tint */
-	--color-surface-50: oklch(12% 0.01 0deg);
-	--color-surface-100: oklch(15% 0.01 0deg);
-	--color-surface-200: oklch(20% 0.01 0deg);
-	--color-surface-300: oklch(25% 0.01 0deg);
-	--color-surface-400: oklch(30% 0.01 0deg);
-	--color-surface-500: oklch(35% 0.01 0deg);
-	--color-surface-600: oklch(40% 0.01 0deg);
-	--color-surface-700: oklch(45% 0.01 0deg);
-	--color-surface-800: oklch(50% 0.01 0deg);
-	--color-surface-900: oklch(55% 0.01 0deg);
+	--color-surface-50: oklch(25% 0.01 0deg);
+	--color-surface-100: oklch(22% 0.01 0deg);
+	--color-surface-200: oklch(19% 0.01 0deg);
+	--color-surface-300: oklch(16% 0.01 0deg);
+	--color-surface-400: oklch(14% 0.01 0deg);
+	--color-surface-500: oklch(12% 0.01 0deg);
+	--color-surface-600: oklch(10% 0.01 0deg);
+	--color-surface-700: oklch(8% 0.008 0deg);
+	--color-surface-800: oklch(6% 0.005 0deg);
+	--color-surface-900: oklch(5% 0.003 0deg);
 	--color-surface-950: oklch(3.9% 0 none);
 	--color-surface-contrast-dark: var(--color-surface-950);
 	--color-surface-contrast-light: var(--color-surface-50);

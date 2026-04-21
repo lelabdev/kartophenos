@@ -8,7 +8,5 @@ export {
 	isPdfFile,
 	getImageDimensions,
 	generateId,
-	generatePin,
-	convertToGrayscale,
-	isGrayscale
+	generatePin
 } from './upload.ts';

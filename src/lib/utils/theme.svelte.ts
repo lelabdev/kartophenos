@@ -3,7 +3,7 @@
  * Uses Skeleton's native data-mode attribute for dark/light mode
  */
 
-const THEME_KEY = 'svelteforge-theme';
+const THEME_KEY = 'kartophenos-theme';
 
 let isDark = $state(false);
 let initialized = false;
