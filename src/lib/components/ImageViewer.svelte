@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { generatePin } from '$lib/services/upload';
+	import { generatePin, PIN_COLORS } from '$lib/services/upload';
 	import { wakeLockStore } from '$lib/utils/wake-lock.svelte';
 	import { viewFilter } from '$lib/utils/view-filter.svelte';
 	import PinModal from './PinModal.svelte';
@@ -50,13 +50,6 @@
 	let showPinOptions = $state(false);
 	let pinLabel = $state('');
 
-	const PIN_COLORS = [
-		{ value: '#e74c3c', name: 'Red' },
-		{ value: '#3498db', name: 'Blue' },
-		{ value: '#2ecc71', name: 'Green' },
-		{ value: '#f1c40f', name: 'Yellow' },
-		{ value: '#ffffff', name: 'White' }
-	];
 
 	let isToolbarVisible = $state(true);
 	let toolbarTimeout: ReturnType<typeof setTimeout> | null = null;

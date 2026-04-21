@@ -1,4 +1,5 @@
 import type { GalleryImage, Pin } from '$lib/types/gallery';
+import { PIN_COLORS } from '$lib/constants';
 
 // Lazy-load pdfjs to avoid top-level side effects
 let pdfjsLib: typeof import('pdfjs-dist') | null = null;
@@ -105,6 +106,7 @@ export function getImageDimensions(dataUrl: string): Promise<{ width: number; he
 	});
 }
 
+export function generateId(): string {
 	if (typeof crypto !== 'undefined' && crypto.randomUUID) {
 		return crypto.randomUUID();
 	}
@@ -125,3 +127,5 @@ export function generatePin(x: number, y: number, label: string, color: string =
 		createdAt: Date.now()
 	};
 }
+
+export { PIN_COLORS };
