@@ -35,7 +35,7 @@
 	<div class="flex items-center justify-around px-2 pt-3 pb-2">
 		<button
 			onclick={onBack}
-			class="w-12 h-12 flex items-center justify-center rounded-xl text-surface-200 hover:bg-surface-500/10 active:scale-95 transition-all"
+			class="w-12 h-12 flex items-center justify-center rounded-xl text-surface-50 hover:bg-surface-500/10 active:scale-95 transition-all"
 			aria-label="Back"
 		>
 			<ChevronLeft size={28} />
@@ -43,7 +43,7 @@
 
 		<button
 			onclick={onTogglePinMode}
-			class="w-12 h-12 flex items-center justify-center rounded-xl {pinMode ? 'text-primary-400 bg-primary-500/20' : 'text-surface-200'} hover:bg-surface-500/10 active:scale-95 transition-all"
+			class="w-12 h-12 flex items-center justify-center rounded-xl {pinMode ? 'text-primary-400 bg-primary-500/20' : 'text-surface-50'} hover:bg-surface-500/10 active:scale-95 transition-all"
 			aria-label="Toggle pin mode"
 		>
 			<MapPin size={28} />
@@ -51,7 +51,7 @@
 
 		<button
 			onclick={onResetView}
-			class="w-12 h-12 flex items-center justify-center rounded-xl text-surface-200 hover:bg-surface-500/10 active:scale-95 transition-all"
+			class="w-12 h-12 flex items-center justify-center rounded-xl text-surface-50 hover:bg-surface-500/10 active:scale-95 transition-all"
 			aria-label="Reset view"
 		>
 			<RefreshCw size={28} />
@@ -59,7 +59,7 @@
 
 		<button
 			onclick={() => onToggleFavorite(image.id)}
-			class="w-12 h-12 flex items-center justify-center rounded-xl {image.isFavorite ? 'text-primary-500' : 'text-surface-200'} hover:bg-surface-500/10 active:scale-95 transition-all"
+			class="w-12 h-12 flex items-center justify-center rounded-xl {image.isFavorite ? 'text-primary-500' : 'text-surface-50'} hover:bg-surface-500/10 active:scale-95 transition-all"
 			aria-label={image.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
 		>
 			<Heart size={28} fill={image.isFavorite ? 'currentColor' : 'none'} />

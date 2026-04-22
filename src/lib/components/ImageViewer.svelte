@@ -99,11 +99,13 @@
 	// then we add panX/panY for the viewport offset.
 
 	function pinScreenX(pin: Pin): number {
-		return panX + pin.x * displayWidth;
+		const offsetX = (containerWidth - displayWidth) / 2;
+		return offsetX + panX + pin.x * displayWidth;
 	}
 
 	function pinScreenY(pin: Pin): number {
-		return panY + pin.y * displayHeight;
+		const offsetY = (containerHeight - displayHeight) / 2;
+		return offsetY + panY + pin.y * displayHeight;
 	}
 
 	// --- Touch gestures ---

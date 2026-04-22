@@ -19,8 +19,8 @@ export const VIEW_FILTERS: {
 	{
 		id: 'nightvision',
 		label: 'Night',
-		// B&W → invert (black bg, white lines) → tint green (night vision)
-		css: 'grayscale(1) invert(1) brightness(0.85) sepia(1) saturate(3) hue-rotate(80deg)',
+		// B&W → invert (black bg, white lines) → tint green (night vision, muted)
+		css: 'grayscale(1) invert(1) brightness(0.55) sepia(1) saturate(1.5) hue-rotate(80deg)',
 		dot: '#2ecc71'
 	}
 ];
