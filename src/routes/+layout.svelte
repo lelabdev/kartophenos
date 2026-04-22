@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { themeStore } from '$lib/utils/theme.svelte';
 	import { viewFilter } from '$lib/utils/view-filter.svelte';
+	import BrightnessSlider from '$lib/components/BrightnessSlider.svelte';
 	import '../app.css';
 
 	let { children } = $props();
@@ -17,4 +18,5 @@
 	data-mode="dark"
 >
 	{@render children()}
+	<BrightnessSlider />
 </div>

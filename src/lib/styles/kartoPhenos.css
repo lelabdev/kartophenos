@@ -206,17 +206,20 @@
 	--color-error-contrast-900: var(--color-error-contrast-light);
 	--color-error-contrast-950: var(--color-error-contrast-light);
 
-	/* Surface colors: Near-blacks with subtle red tint */
-	--color-surface-50: oklch(25% 0.01 0deg);
-	--color-surface-100: oklch(22% 0.01 0deg);
-	--color-surface-200: oklch(19% 0.01 0deg);
-	--color-surface-300: oklch(16% 0.01 0deg);
-	--color-surface-400: oklch(14% 0.01 0deg);
-	--color-surface-500: oklch(12% 0.01 0deg);
-	--color-surface-600: oklch(10% 0.01 0deg);
-	--color-surface-700: oklch(8% 0.008 0deg);
-	--color-surface-800: oklch(6% 0.005 0deg);
-	--color-surface-900: oklch(5% 0.003 0deg);
+	/* Surface colors: Near-blacks — dark backgrounds, light text */
+	/* 50–200 = text shades (readable but soft, cinema credits style) */
+	/* 300–500 = subtle elements, borders, card backgrounds */
+	/* 600–950 = deep darks to near-black */
+	--color-surface-50: oklch(78% 0.008 0deg);
+	--color-surface-100: oklch(65% 0.008 0deg);
+	--color-surface-200: oklch(52% 0.008 0deg);
+	--color-surface-300: oklch(40% 0.008 0deg);
+	--color-surface-400: oklch(30% 0.008 0deg);
+	--color-surface-500: oklch(22% 0.008 0deg);
+	--color-surface-600: oklch(16% 0.006 0deg);
+	--color-surface-700: oklch(11% 0.005 0deg);
+	--color-surface-800: oklch(7% 0.003 0deg);
+	--color-surface-900: oklch(5% 0.002 0deg);
 	--color-surface-950: oklch(3.9% 0 none);
 	--color-surface-contrast-dark: var(--color-surface-950);
 	--color-surface-contrast-light: var(--color-surface-50);
