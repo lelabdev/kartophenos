@@ -1,14 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Sun } from 'lucide-svelte';
+	import { brightnessStore } from '$lib/utils/brightness.svelte';
 
-	let brightness = $state(100);
 	let drawerOpen = $state(false);
-	let drawerWidth = $state(0);
-	let drawerEl: HTMLDivElement | undefined = $state();
-
-	const MIN = 20;
-	const MAX = 100;
 
 	function toggle() {
 		drawerOpen = !drawerOpen;
@@ -19,11 +14,6 @@
 			drawerOpen = false;
 		}
 	}
-
-	$effect(() => {
-		const clamped = Math.max(MIN, Math.min(MAX, brightness));
-		document.documentElement.style.filter = `brightness(${clamped / 100})`;
-	});
 
 	onMount(() => {
 		document.addEventListener('keydown', handleKeydown);
@@ -37,7 +27,7 @@
 	class="fixed right-0 top-1/2 -translate-y-1/2 z-50 w-8 h-14
 	       bg-surface-800/80 border border-surface-300/20 border-r-0
 	       rounded-l-lg flex items-center justify-center
-	       text-surface-200 hover:bg-surface-700/80 active:scale-95
+	       text-surface-50 hover:bg-surface-700/80 active:scale-95
 	       transition-all touch-manipulation"
 	aria-label="Brightness"
 	title="Brightness"
@@ -56,7 +46,6 @@
 
 <!-- Drawer panel -->
 <div
-	bind:this={drawerEl}
 	class="fixed right-0 top-0 bottom-0 z-50 w-12
 	       bg-surface-900/95 backdrop-blur-sm border-l border-surface-300/15
 	       flex flex-col items-center pt-6 pb-6 gap-4
@@ -64,8 +53,8 @@
 	       {drawerOpen ? 'translate-x-0' : 'translate-x-full'}"
 >
 	<!-- Label -->
-	<span class="text-surface-300 text-[10px] font-medium tracking-wider uppercase select-none">
-		{brightness}%
+	<span class="text-surface-100 text-[10px] font-medium tracking-wider uppercase select-none">
+		{brightnessStore.value}%
 	</span>
 
 	<!-- Vertical slider -->
@@ -75,16 +64,17 @@
 			<!-- Fill -->
 			<div
 				class="absolute bottom-0 left-0 right-0 bg-surface-100/60 rounded-full transition-all"
-				style="height: {((brightness - MIN) / (MAX - MIN)) * 100}%;"
+				style="height: {((brightnessStore.value - brightnessStore.MIN) / (brightnessStore.MAX - brightnessStore.MIN)) * 100}%;"
 			></div>
 		</div>
 
 		<!-- Touch target (invisible, large) -->
 		<input
 			type="range"
-			min={MIN}
-			max={MAX}
-			bind:value={brightness}
+			min={brightnessStore.MIN}
+			max={brightnessStore.MAX}
+			value={brightnessStore.value}
+			oninput={(e) => brightnessStore.set(parseInt((e.target as HTMLInputElement).value, 10))}
 			class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
 			orient="vertical"
 			style="writing-mode: vertical-lr; direction: rtl;"
@@ -93,5 +83,5 @@
 	</div>
 
 	<!-- Sun icon bottom -->
-	<Sun size={14} class="text-surface-400" />
+	<Sun size={14} class="text-surface-200" />
 </div>

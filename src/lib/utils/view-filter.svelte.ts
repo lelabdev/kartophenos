@@ -1,4 +1,4 @@
-export type ViewFilter = 'original' | 'red' | 'nightvision';
+export type ViewFilter = 'original' | 'red' | 'inverted' | 'nightvision';
 
 const STORAGE_KEY = 'kartophenos-filter';
 
@@ -15,6 +15,12 @@ export const VIEW_FILTERS: {
 		// B&W → invert (black bg, white lines) → tint red
 		css: 'grayscale(1) invert(1) brightness(0.85) sepia(1) saturate(3) hue-rotate(-30deg)',
 		dot: '#e74c3c'
+	},
+	{
+		id: 'inverted',
+		label: 'Inversé',
+		css: 'invert(1)',
+		dot: '#ddd'
 	},
 	{
 		id: 'nightvision',
@@ -55,6 +61,7 @@ export const viewFilter = {
 		const map: Record<ViewFilter, string> = {
 			original: 'kartoPhenos',
 			red: 'kartoPhenos-red',
+			inverted: 'kartoPhenos',
 			nightvision: 'kartoPhenos-night'
 		};
 		return map[active];

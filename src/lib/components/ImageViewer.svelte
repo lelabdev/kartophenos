@@ -3,6 +3,7 @@
 	import { generatePin, PIN_COLORS } from '$lib/services/upload';
 	import { wakeLockStore } from '$lib/utils/wake-lock.svelte';
 	import { viewFilter } from '$lib/utils/view-filter.svelte';
+	import { brightnessStore } from '$lib/utils/brightness.svelte';
 	import PinModal from './PinModal.svelte';
 	import ViewerToolbar from './ViewerToolbar.svelte';
 	import type { GalleryImage, Pin } from '$lib/types/gallery';
@@ -31,7 +32,6 @@
 	let panY = $state(0);
 	let zoom = $state(1);
 	let rotation = $state(0);
-	let brightness = $state(100);
 
 	let isDragging = $state(false);
 	let dragStartX = $state(0);
@@ -60,7 +60,7 @@
 	let containerHeight = $state(0);
 
 	let imageFilter = $derived(
-		[brightness !== 100 ? `brightness(${brightness / 100})` : '', viewFilter.css]
+		[brightnessStore.value !== 100 ? `brightness(${brightnessStore.value / 100})` : '', viewFilter.css]
 			.filter(Boolean)
 			.join(' ')
 	);
@@ -74,7 +74,7 @@
 		panY = 0;
 		zoom = 1;
 		rotation = 0;
-		brightness = 100;
+		brightnessStore.set(100);
 	}
 
 	function fitImageToViewport() {
@@ -354,7 +354,7 @@
 	<ViewerToolbar
 		{image}
 		{pinMode}
-		{brightness}
+		brightness={brightnessStore.value}
 		visible={isToolbarVisible}
 		onBack={onBack}
 		onTogglePinMode={() => {
@@ -366,7 +366,7 @@
 		}}
 		onResetView={resetView}
 		onToggleFavorite={onToggleFavorite}
-		onBrightnessChange={(v) => (brightness = v)}
+		onBrightnessChange={(v) => brightnessStore.set(v)}
 	/>
 
 	<!-- Pin Color Picker (shown when pin button clicked) -->
