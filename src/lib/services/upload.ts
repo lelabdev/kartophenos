@@ -7,10 +7,9 @@ let pdfjsLib: typeof import('pdfjs-dist') | null = null;
 async function getPdfjs() {
 	if (!pdfjsLib) {
 		pdfjsLib = await import('pdfjs-dist');
-		pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-			'pdfjs-dist/build/pdf.worker.min.mjs',
-			import.meta.url
-		).toString();
+		// Disable worker — runs on main thread. Works for PWA offline,
+		// avoids broken worker URL in production builds.
+		pdfjsLib.GlobalWorkerOptions.workerSrc = '';
 	}
 	return pdfjsLib;
 }
@@ -66,6 +65,33 @@ export async function createThumbnail(dataUrl: string, maxSize: number = 300): P
 	});
 }
 
+async function renderPdfPage(page: import('pdfjs-dist').PDFPageProxy, scale: number = 2.0): Promise<string> {
+	const viewport = page.getViewport({ scale });
+	const canvas = document.createElement('canvas');
+	canvas.height = viewport.height;
+	canvas.width = viewport.width;
+
+	await page.render({ canvas, viewport }).promise;
+	return canvas.toDataURL('image/jpeg', 0.9);
+}
+
+/** Convert a PDF file to an array of images (one per page) */
+export async function pdfToImages(file: File): Promise<{ dataUrl: string; pageCount: number }[]> {
+	const pdfjs = await getPdfjs();
+	const arrayBuffer = await file.arrayBuffer();
+	const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+	const pageCount = pdf.numPages;
+
+	const pages: { dataUrl: string; pageCount: number }[] = [];
+	for (let i = 1; i <= pageCount; i++) {
+		const page = await pdf.getPage(i);
+		const dataUrl = await renderPdfPage(page);
+		pages.push({ dataUrl, pageCount });
+	}
+	return pages;
+}
+
+/** @deprecated Use pdfToImages instead — only renders page 1 */
 export async function pdfToImage(file: File): Promise<{ dataUrl: string; pageCount: number }> {
 	const pdfjs = await getPdfjs();
 	const arrayBuffer = await file.arrayBuffer();
@@ -73,18 +99,7 @@ export async function pdfToImage(file: File): Promise<{ dataUrl: string; pageCou
 	const pageCount = pdf.numPages;
 
 	const page = await pdf.getPage(1);
-	const viewport = page.getViewport({ scale: 2.0 });
-	const canvas = document.createElement('canvas');
-
-	canvas.height = viewport.height;
-	canvas.width = viewport.width;
-
-	await page.render({
-		canvas,
-		viewport
-	}).promise;
-
-	const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+	const dataUrl = await renderPdfPage(page);
 	return { dataUrl, pageCount };
 }
 

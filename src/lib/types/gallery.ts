@@ -9,6 +9,7 @@ export interface GalleryImage {
 	isFavorite: boolean;
 	isPdf: boolean;
 	pdfPageCount?: number;
+	pdfPageIndex?: number;
 	createdAt: number;
 	pins: Pin[];
 }
