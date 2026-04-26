@@ -27,21 +27,31 @@
 
 	let containerElement: HTMLDivElement;
 
+	const MIN_ZOOM = 0.1;
+	const MAX_ZOOM = 10;
+	const INERTIA_FRICTION = 0.92;
+	const INERTIA_THRESHOLD = 0.5;
+
 	let panX = $state(0);
 	let panY = $state(0);
 	let zoom = $state(1);
 	let rotation = $state(0);
 	let brightness = $state(100);
 
-	let isDragging = $state(false);
-	let dragStartX = $state(0);
-	let dragStartY = $state(0);
+	let isDragging = false;
+	let dragStartX = 0;
+	let dragStartY = 0;
 
-	let touches = $state(new Map<number, { x: number; y: number }>());
-	let initialPinchDistance = $state(0);
-	let initialZoom = $state(1);
-	let initialRotation = $state(0);
-	let initialAngle = $state(0);
+	// Pinch state (non-reactive — no need for $state)
+	let activeTouches = new Map<number, { x: number; y: number }>();
+	let pinchStartDistance = 0;
+	let pinchStartZoom = 1;
+	let pinchStartMidX = 0;
+	let pinchStartMidY = 0;
+	let pinchStartPanX = 0;
+	let pinchStartPanY = 0;
+	let pinchStartAngle = 0;
+	let pinchStartRotation = 0;
 
 	let pinMode = $state(false);
 	let pickingPinColor = $state(false);
@@ -50,11 +60,15 @@
 	let showPinOptions = $state(false);
 	let pinLabel = $state('');
 
-
 	let isToolbarVisible = $state(true);
 	let toolbarTimeout: ReturnType<typeof setTimeout> | null = null;
-	let lastDoubleTap = $state(0);
-	let lastDoubleClick = $state(0);
+	let lastDoubleTap = 0;
+	let lastDoubleClick = 0;
+
+	// Inertia
+	let velocityX = 0;
+	let velocityY = 0;
+	let inertiaFrame = 0;
 
 	let containerWidth = $state(0);
 	let containerHeight = $state(0);
@@ -65,7 +79,6 @@
 			.join(' ')
 	);
 
-	// Compute the displayed image size (natural size * zoom)
 	let displayWidth = $derived(image.width * zoom);
 	let displayHeight = $derived(image.height * zoom);
 
@@ -94,9 +107,6 @@
 	}
 
 	// --- Pin position computation ---
-	// Pins store coordinates as ratios (0-1) relative to the image natural dimensions.
-	// To render: ratio * naturalSize * zoom gives offset in the transformed space,
-	// then we add panX/panY for the viewport offset.
 
 	function pinScreenX(pin: Pin): number {
 		return panX + pin.x * displayWidth;
@@ -106,30 +116,93 @@
 		return panY + pin.y * displayHeight;
 	}
 
-	// --- Touch gestures ---
+	// --- Helpers ---
 
 	function getDistance(a: { x: number; y: number }, b: { x: number; y: number }): number {
 		return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
+	}
+
+	function getMidpoint(a: { x: number; y: number }, b: { x: number; y: number }): { x: number; y: number } {
+		return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
 	}
 
 	function getAngle(a: { x: number; y: number }, b: { x: number; y: number }): number {
 		return Math.atan2(b.y - a.y, b.x - a.x) * (180 / Math.PI);
 	}
 
+	function clampZoom(z: number): number {
+		return Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, z));
+	}
+
+	// Zoom toward a specific screen point, keeping that point fixed
+	function zoomTowardPoint(screenX: number, screenY: number, newZoom: number) {
+		const oldZoom = zoom;
+		const clamped = clampZoom(newZoom);
+		if (clamped === oldZoom) return;
+
+		// The image center in screen coords: container center + pan
+		const cx = containerWidth / 2 + panX;
+		const cy = containerHeight / 2 + panY;
+
+		// The point in image-space that we want to keep under the finger
+		const imgX = (screenX - cx) / oldZoom;
+		const imgY = (screenY - cy) / oldZoom;
+
+		// New pan to keep that point at the same screen position
+		panX = screenX - containerWidth / 2 - imgX * clamped;
+		panY = screenY - containerHeight / 2 - imgY * clamped;
+		zoom = clamped;
+	}
+
+	// --- Inertia ---
+
+	function startInertia() {
+		cancelAnimationFrame(inertiaFrame);
+		function step() {
+			if (Math.abs(velocityX) < INERTIA_THRESHOLD && Math.abs(velocityY) < INERTIA_THRESHOLD) {
+				velocityX = 0;
+				velocityY = 0;
+				return;
+			}
+			panX += velocityX;
+			panY += velocityY;
+			velocityX *= INERTIA_FRICTION;
+			velocityY *= INERTIA_FRICTION;
+			inertiaFrame = requestAnimationFrame(step);
+		}
+		inertiaFrame = requestAnimationFrame(step);
+	}
+
+	function stopInertia() {
+		cancelAnimationFrame(inertiaFrame);
+		velocityX = 0;
+		velocityY = 0;
+	}
+
+	// --- Touch gestures ---
+
 	function handleTouchStart(event: TouchEvent) {
 		displayToolbar();
 		event.preventDefault();
+		stopInertia();
+
 		for (const t of event.changedTouches) {
-			touches.set(t.identifier, { x: t.clientX, y: t.clientY });
+			activeTouches.set(t.identifier, { x: t.clientX, y: t.clientY });
 		}
-		if (touches.size === 2) {
-			const [t1, t2] = Array.from(touches.values());
-			initialPinchDistance = getDistance(t1, t2);
-			initialZoom = zoom;
-			initialRotation = rotation;
-			initialAngle = getAngle(t1, t2);
-		} else if (touches.size === 1 && !pinMode) {
-			const touch = touches.values().next().value;
+
+		if (activeTouches.size === 2) {
+			const pts = Array.from(activeTouches.values());
+			pinchStartDistance = getDistance(pts[0], pts[1]);
+			pinchStartZoom = zoom;
+			pinchStartRotation = rotation;
+			pinchStartAngle = getAngle(pts[0], pts[1]);
+			const mid = getMidpoint(pts[0], pts[1]);
+			pinchStartMidX = mid.x;
+			pinchStartMidY = mid.y;
+			pinchStartPanX = panX;
+			pinchStartPanY = panY;
+		} else if (activeTouches.size === 1) {
+			const touch = activeTouches.values().next().value;
 			if (touch) {
 				dragStartX = touch.x;
 				dragStartY = touch.y;
@@ -146,29 +219,76 @@
 
 	function handleTouchMove(event: TouchEvent) {
 		event.preventDefault();
+
 		for (const t of event.changedTouches) {
-			if (touches.has(t.identifier)) touches.set(t.identifier, { x: t.clientX, y: t.clientY });
+			if (activeTouches.has(t.identifier)) {
+				activeTouches.set(t.identifier, { x: t.clientX, y: t.clientY });
+			}
 		}
-		if (touches.size === 1 && !pinMode) {
-			const touch = touches.values().next().value;
+
+		if (activeTouches.size === 1 && !pinMode) {
+			const touch = activeTouches.values().next().value;
 			if (touch) {
-				panX += touch.x - dragStartX;
-				panY += touch.y - dragStartY;
+				const dx = touch.x - dragStartX;
+				const dy = touch.y - dragStartY;
+				panX += dx;
+				panY += dy;
+				velocityX = dx;
+				velocityY = dy;
 				dragStartX = touch.x;
 				dragStartY = touch.y;
 			}
-		} else if (touches.size === 2) {
-			const [t1, t2] = Array.from(touches.values());
-			zoom = Math.max(0.5, Math.min(5, initialZoom * (getDistance(t1, t2) / initialPinchDistance)));
-			// Rotation: compare current angle to initial angle, snap to 90°
-			const currentAngle = getAngle(t1, t2);
-			const angleDelta = currentAngle - initialAngle;
-			rotation = initialRotation + Math.round(angleDelta / 90) * 90;
+		} else if (activeTouches.size === 2) {
+			const pts = Array.from(activeTouches.values());
+			if (pts.length < 2) return;
+
+			const currentDistance = getDistance(pts[0], pts[1]);
+			const mid = getMidpoint(pts[0], pts[1]);
+
+			// Zoom: scale from pinch start, centered on midpoint
+			const scaleFactor = currentDistance / pinchStartDistance;
+			const newZoom = clampZoom(pinchStartZoom * scaleFactor);
+
+			// Rotation: free angle, not snapped
+			const currentAngle = getAngle(pts[0], pts[1]);
+			const angleDelta = currentAngle - pinchStartAngle;
+			rotation = pinchStartRotation + angleDelta;
+
+			// Pan: adjust so midpoint stays under fingers
+			const midDeltaX = mid.x - pinchStartMidX;
+			const midDeltaY = mid.y - pinchStartMidY;
+
+			// Compute new pan keeping midpoint fixed
+			const cx = containerWidth / 2;
+			const cy = containerHeight / 2;
+
+			// Image-space point under initial midpoint
+			const imgX = (pinchStartMidX - cx - pinchStartPanX) / pinchStartZoom;
+			const imgY = (pinchStartMidY - cy - pinchStartPanY) / pinchStartZoom;
+
+			// New pan: keep that image point under the new midpoint
+			panX = mid.x - cx - imgX * newZoom + midDeltaX;
+			panY = mid.y - cy - imgY * newZoom + midDeltaY;
+			zoom = newZoom;
 		}
 	}
 
 	function handleTouchEnd(event: TouchEvent) {
-		for (const t of event.changedTouches) touches.delete(t.identifier);
+		for (const t of event.changedTouches) activeTouches.delete(t.identifier);
+
+		// If we had 2 fingers and now have 1, update dragStart to avoid jump
+		if (activeTouches.size === 1) {
+			const touch = activeTouches.values().next().value;
+			if (touch) {
+				dragStartX = touch.x;
+				dragStartY = touch.y;
+			}
+		}
+
+		// Start inertia on 1-finger lift
+		if (activeTouches.size === 0 && (Math.abs(velocityX) > INERTIA_THRESHOLD || Math.abs(velocityY) > INERTIA_THRESHOLD)) {
+			startInertia();
+		}
 	}
 
 	// --- Mouse gestures ---
@@ -176,6 +296,7 @@
 	function handleMouseDown(event: MouseEvent) {
 		displayToolbar();
 		if (event.button !== 0) return;
+		stopInertia();
 		isDragging = true;
 		dragStartX = event.clientX;
 		dragStartY = event.clientY;
@@ -183,20 +304,29 @@
 
 	function handleMouseMove(event: MouseEvent) {
 		if (!isDragging || pinMode) return;
-		panX += event.clientX - dragStartX;
-		panY += event.clientY - dragStartY;
+		const dx = event.clientX - dragStartX;
+		const dy = event.clientY - dragStartY;
+		panX += dx;
+		panY += dy;
+		velocityX = dx;
+		velocityY = dy;
 		dragStartX = event.clientX;
 		dragStartY = event.clientY;
 	}
 
 	function handleMouseUp() {
+		if (isDragging && (Math.abs(velocityX) > INERTIA_THRESHOLD || Math.abs(velocityY) > INERTIA_THRESHOLD)) {
+			startInertia();
+		}
 		isDragging = false;
 	}
 
 	function handleWheel(event: WheelEvent) {
 		displayToolbar();
 		event.preventDefault();
-		zoom = Math.max(0.5, Math.min(5, zoom * (event.deltaY > 0 ? 0.9 : 1.1)));
+		stopInertia();
+		const factor = event.deltaY > 0 ? 0.9 : 1.1;
+		zoomTowardPoint(event.clientX, event.clientY, zoom * factor);
 	}
 
 	function handleDoubleClick() {
@@ -215,26 +345,20 @@
 		if (!pinMode) return;
 
 		const rect = containerElement.getBoundingClientRect();
-		// Click position relative to container
 		const clickX = event.clientX - rect.left;
 		const clickY = event.clientY - rect.top;
 
-		// Convert to image-relative position:
-		// The image is centered in the container via flex, offset by pan
 		const imgCenterX = rect.width / 2 + panX;
 		const imgCenterY = rect.height / 2 + panY;
 		const imgLeft = imgCenterX - displayWidth / 2;
 		const imgTop = imgCenterY - displayHeight / 2;
 
-		// Position relative to image, in pixels
 		const relX = clickX - imgLeft;
 		const relY = clickY - imgTop;
 
-		// Convert to ratio (0-1)
 		const ratioX = relX / displayWidth;
 		const ratioY = relY / displayHeight;
 
-		// Only place pin if click is within image bounds
 		if (ratioX < 0 || ratioX > 1 || ratioY < 0 || ratioY > 1) return;
 
 		const pin = generatePin(ratioX, ratioY, '', selectedPinColor);
@@ -280,6 +404,7 @@
 		wakeLockStore.request();
 		return () => {
 			window.removeEventListener('resize', handleResize);
+			cancelAnimationFrame(inertiaFrame);
 			if (toolbarTimeout) clearTimeout(toolbarTimeout);
 			wakeLockStore.release();
 		};
@@ -314,7 +439,7 @@
 	<!-- Image -->
 	<div
 		class="absolute inset-0 flex items-center justify-center"
-		style="transform: translate({panX}px, {panY}px) scale({zoom}) rotate({rotation}deg); transition: transform 0.1s ease-out;"
+		style="transform: translate({panX}px, {panY}px) scale({zoom}) rotate({rotation}deg); transition: transform 0.05s linear;"
 	>
 		<img
 			src={image.dataUrl}
