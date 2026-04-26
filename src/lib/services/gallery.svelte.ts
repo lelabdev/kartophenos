@@ -3,7 +3,7 @@ import type { GalleryImage, Pin } from '$lib/types/gallery';
 import {
 	fileToDataUrl,
 	createThumbnail,
-	pdfToImage,
+	pdfToImages,
 	isImageFile,
 	isPdfFile,
 	getImageDimensions,
@@ -77,51 +77,75 @@ export class GalleryService {
 		}
 	}
 
-	async addImage(file: File, category: string): Promise<GalleryImage> {
-		let dataUrl: string;
-		let isPdf = false;
-		let pdfPageCount: number | undefined;
-
+	async addImage(file: File, category: string): Promise<GalleryImage[]> {
 		try {
 			if (isImageFile(file)) {
-				dataUrl = await fileToDataUrl(file);
+				const dataUrl = await fileToDataUrl(file);
+				const { width, height } = await getImageDimensions(dataUrl);
+				const thumbnail = await createThumbnail(dataUrl);
+
+				const newImage: GalleryImage = {
+					id: generateId(),
+					name: file.name,
+					category,
+					dataUrl: '',
+					thumbnail,
+					width,
+					height,
+					isFavorite: false,
+					isPdf: false,
+					createdAt: Date.now(),
+					pins: []
+				};
+
+				this._state.images = [...this._state.images, newImage];
+				await set(newImage.id, dataUrl, fullSizeStore);
+				await saveImages(this._state.images);
+				return [newImage];
 			} else if (isPdfFile(file)) {
-				const result = await pdfToImage(file);
-				dataUrl = result.dataUrl;
-				isPdf = true;
-				pdfPageCount = result.pageCount;
+				const pages = await pdfToImages(file);
+				const created: GalleryImage[] = [];
+
+				for (let i = 0; i < pages.length; i++) {
+					const pageDataUrl = pages[i].dataUrl;
+					const { width, height } = await getImageDimensions(pageDataUrl);
+					const thumbnail = await createThumbnail(pageDataUrl);
+
+					const name =
+						pages.length === 1
+							? file.name
+							: `${file.name.replace(/\.pdf$/i, '')} — Page ${i + 1}/${pages.length}`;
+
+					const newImage: GalleryImage = {
+						id: generateId(),
+						name,
+						category,
+						dataUrl: '',
+						thumbnail,
+						width,
+						height,
+						isFavorite: false,
+						isPdf: true,
+						pdfPageCount: pages.length,
+						pdfPageIndex: i + 1,
+						createdAt: Date.now(),
+						pins: []
+					};
+
+					this._state.images = [...this._state.images, newImage];
+					await set(newImage.id, pageDataUrl, fullSizeStore);
+					created.push(newImage);
+				}
+
+				await saveImages(this._state.images);
+				return created;
 			} else {
 				throw new Error('Unsupported file type: ' + file.type);
 			}
-
-			const { width, height } = await getImageDimensions(dataUrl);
-			const thumbnail = await createThumbnail(dataUrl);
-
-			const newImage: GalleryImage = {
-				id: generateId(),
-				name: file.name,
-				category,
-				dataUrl: '',
-				thumbnail,
-				width,
-				height,
-				isFavorite: false,
-				isPdf,
-				pdfPageCount,
-				createdAt: Date.now(),
-				pins: []
-			};
-
-			this._state.images = [...this._state.images, newImage];
-
-			await set(newImage.id, dataUrl, fullSizeStore);
-		await saveImages(this._state.images);
-
-		return newImage;
-	} catch (error) {
-		console.error('Failed to add image:', error);
-		throw error;
-	}
+		} catch (error) {
+			console.error('Failed to add image:', error);
+			throw error;
+		}
 	}
 
 	async removeImage(id: string): Promise<void> {
