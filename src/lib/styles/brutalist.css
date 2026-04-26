@@ -1,0 +1,104 @@
+/* kartoPhenos Brutalist Theme — Street Art/Industrial Underground */
+/* Adapté pour l'obscurité : formes dures mais contrastes maîtrisés */
+
+[data-theme='kartoPhenos-brutalist'] {
+	/* Typography: Monospace raw, uppercase headers */
+	--base-font-family: 'Fira Code Variable', monospace;
+	--heading-font-family: 'Space Grotesk Variable', sans-serif;
+	--heading-font-weight: 900;
+	--heading-letter-spacing: 0.05em;
+	--heading-font-style: normal;
+
+	/* Brutalist borders: thick, sharp */
+	--default-border-width: 3px;
+	--radius-base: 0;
+	--radius-container: 0;
+	--default-ring-width: 2px;
+
+	/* Hard shadows: no blur, offset raw */
+	--shadow-brutal-sm: 3px 3px 0 oklch(35% 0.01 0deg);
+	--shadow-brutal-md: 6px 6px 0 oklch(35% 0.01 0deg);
+	--shadow-brutal-lg: 10px 10px 0 oklch(35% 0.01 0deg);
+
+	/* Surface scale: higher contrast for better readability */
+	--color-surface-50: oklch(98% 0.005 0deg); /* Very bright text */
+	--color-surface-100: oklch(92% 0.005 0deg);
+	--color-surface-200: oklch(85% 0.005 0deg);
+	--color-surface-300: oklch(78% 0.005 0deg);
+	--color-surface-400: oklch(60% 0.005 0deg);
+	--color-surface-500: oklch(45% 0.005 0deg);
+	--color-surface-600: oklch(35% 0.005 0deg);
+	--color-surface-700: oklch(25% 0.005 0deg);
+	--color-surface-800: oklch(15% 0.003 0deg);
+	--color-surface-900: oklch(10% 0.002 0deg);
+	--color-surface-950: oklch(6% 0 none);
+
+	/* Primary: higher contrast industrial gray-blue */
+	--color-primary-50: oklch(95% 0.03 240deg);
+	--color-primary-100: oklch(88% 0.04 240deg);
+	--color-primary-200: oklch(82% 0.05 240deg);
+	--color-primary-300: oklch(75% 0.06 240deg);
+	--color-primary-400: oklch(68% 0.07 240deg);
+	--color-primary-500: oklch(55% 0.08 240deg);
+	--color-primary-600: oklch(45% 0.07 240deg);
+	--color-primary-700: oklch(35% 0.06 240deg);
+	--color-primary-800: oklch(25% 0.05 240deg);
+	--color-primary-900: oklch(18% 0.04 240deg);
+	--color-primary-950: oklch(12% 0.03 240deg);
+}
+
+/* Brutalist utility classes */
+.brutalist-card {
+	border: 3px solid oklch(35% 0.005 0deg) !important;
+	border-radius: 0 !important;
+	box-shadow: var(--shadow-brutal-sm) !important;
+	background: oklch(8% 0 none) !important;
+}
+
+.brutalist-button {
+	border: 3px solid oklch(55% 0.08 240deg) !important;
+	border-radius: 0 !important;
+	background: oklch(8% 0 none) !important;
+	color: oklch(85% 0.005 0deg) !important;
+	box-shadow: var(--shadow-brutal-sm) !important;
+	font-family: 'Fira Code Variable', monospace !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.05em !important;
+	font-weight: 700 !important;
+	transition: none !important;
+}
+
+.brutalist-button:hover {
+	background: oklch(45% 0.07 240deg) !important;
+	color: oklch(98% 0.005 0deg) !important;
+	box-shadow: var(--shadow-brutal-md) !important;
+	transform: translate(-2px, -2px) !important;
+}
+
+.brutalist-button:active {
+	box-shadow: none !important;
+	transform: translate(3px, 3px) !important;
+}
+
+.brutalist-input {
+	border: 3px solid oklch(45% 0.005 0deg) !important;
+	border-radius: 0 !important;
+	background: oklch(8% 0 none) !important;
+	color: oklch(92% 0.005 0deg) !important;
+	font-family: 'Fira Code Variable', monospace !important;
+	box-shadow: var(--shadow-brutal-sm) !important;
+}
+
+.brutalist-input:focus {
+	outline: none !important;
+	border-color: oklch(68% 0.07 240deg) !important;
+	box-shadow: 4px 4px 0 oklch(68% 0.07 240deg) !important;
+}
+
+.brutalist-title {
+	font-family: 'Space Grotesk Variable', sans-serif !important;
+	font-weight: 900 !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.1em !important;
+	-webkit-text-stroke: 0.5px oklch(35% 0.005 0deg) !important;
+}

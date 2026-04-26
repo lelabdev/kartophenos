@@ -10,6 +10,7 @@
 @import '@skeletonlabs/skeleton';
 @import '@skeletonlabs/skeleton-svelte';
 @import './lib/styles/kartoPhenos.css';
+@import './lib/styles/brutalist.css';
 @import './lib/styles/tokens.css';
 
 /* Register Skeleton's --color-primary-* as Tailwind theme colors */
