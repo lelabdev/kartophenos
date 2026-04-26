@@ -7,10 +7,9 @@ let pdfjsLib: typeof import('pdfjs-dist') | null = null;
 async function getPdfjs() {
 	if (!pdfjsLib) {
 		pdfjsLib = await import('pdfjs-dist');
-		pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-			'pdfjs-dist/build/pdf.worker.min.mjs',
-			import.meta.url
-		).toString();
+		// Disable worker — runs on main thread. Works for PWA offline,
+		// avoids broken worker URL in production builds.
+		pdfjsLib.GlobalWorkerOptions.workerSrc = '';
 	}
 	return pdfjsLib;
 }
