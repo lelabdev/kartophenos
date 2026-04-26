@@ -501,7 +501,10 @@
 
 	<!-- Pin Color Picker (shown when pin button clicked) -->
 	{#if pickingPinColor}
-		<div class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-surface-950/90 backdrop-blur-sm border border-surface-300/10 rounded-full px-4 py-2 flex items-center gap-3">
+		<div
+			class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-surface-950/90 backdrop-blur-sm border border-surface-300/10 rounded-full px-4 py-2 flex items-center gap-3"
+			onclick={(e) => e.stopPropagation()}
+		>
 			{#each PIN_COLORS as c}
 				<button
 					onclick={() => {
