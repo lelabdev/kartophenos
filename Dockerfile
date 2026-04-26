@@ -1,18 +1,18 @@
-# Build stage
-FROM node:22-alpine AS builder
+# Build stage — Bun via Oven
+FROM oven/bun:alpine AS builder
 WORKDIR /app
 
-COPY package.json package-lock.json* bun.lock* ./
-RUN npm install
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 
 COPY . .
-RUN npm run build
+RUN bun run build
 
-# Production stage
+# Production stage — nginx for static SPA
 FROM nginx:alpine
 COPY --from=builder /app/build /usr/share/nginx/html
 
-# SPA fallback — redirect all non-file requests to index.html
+# SPA fallback
 RUN echo 'server { \
     listen 80; \
     root /usr/share/nginx/html; \
