@@ -66,6 +66,7 @@
 	let lastDoubleClick = 0;
 
 	// Inertia
+	let isGesturing = $state(false);
 	let velocityX = 0;
 	let velocityY = 0;
 	let inertiaFrame = 0;
@@ -196,6 +197,7 @@
 			pinchStartZoom = zoom;
 			pinchStartRotation = rotation;
 			pinchStartAngle = getAngle(pts[0], pts[1]);
+			isGesturing = true;
 			const mid = getMidpoint(pts[0], pts[1]);
 			pinchStartMidX = mid.x;
 			pinchStartMidY = mid.y;
@@ -249,9 +251,12 @@
 			const scaleFactor = currentDistance / pinchStartDistance;
 			const newZoom = clampZoom(pinchStartZoom * scaleFactor);
 
-			// Rotation: free angle, not snapped
+			// Rotation: free angle, normalized to avoid atan2 wrapping
 			const currentAngle = getAngle(pts[0], pts[1]);
-			const angleDelta = currentAngle - pinchStartAngle;
+			let angleDelta = currentAngle - pinchStartAngle;
+			// Normalize to [-180, 180] to prevent jumps when atan2 wraps
+			if (angleDelta > 180) angleDelta -= 360;
+			if (angleDelta < -180) angleDelta += 360;
 			rotation = pinchStartRotation + angleDelta;
 
 			// Pan: adjust so midpoint stays under fingers
@@ -275,6 +280,8 @@
 
 	function handleTouchEnd(event: TouchEvent) {
 		for (const t of event.changedTouches) activeTouches.delete(t.identifier);
+
+		if (activeTouches.size < 2) isGesturing = false;
 
 		// If we had 2 fingers and now have 1, update dragStart to avoid jump
 		if (activeTouches.size === 1) {
@@ -439,7 +446,7 @@
 	<!-- Image -->
 	<div
 		class="absolute inset-0 flex items-center justify-center"
-		style="transform: translate({panX}px, {panY}px) scale({zoom}) rotate({rotation}deg); transition: transform 0.05s linear;"
+		style="transform: translate({panX}px, {panY}px) scale({zoom}) rotate({rotation}deg); {isGesturing ? '' : 'transition: transform 0.15s ease-out;'}"
 	>
 		<img
 			src={image.dataUrl}
